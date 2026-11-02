@@ -1,30 +1,60 @@
-# Experiment 16: Decision Tree metrics and 2D decision-boundary visualization
-import numpy as np
+
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 
-iris = load_iris()
-X = iris.data[:, :2]  # First two features allow a 2D decision-boundary plot.
-y = iris.target
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.25, random_state=42, stratify=y
-)
-model = DecisionTreeClassifier(max_depth=4, random_state=42).fit(X_train, y_train)
-pred = model.predict(X_test)
-print("Accuracy:", accuracy_score(y_test, pred))
-print("Confusion matrix:\n", confusion_matrix(y_test, pred))
+# Load dataset (use first 2 features for visualization)
+d = load_iris()
+X, y = d.data[:, :2], d.target
 
-x_min, x_max = X[:, 0].min() - 0.5, X[:, 0].max() + 0.5
-y_min, y_max = X[:, 1].min() - 0.5, X[:, 1].max() + 0.5
-xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02),
-                     np.arange(y_min, y_max, 0.02))
-Z = model.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
-plt.contourf(xx, yy, Z, alpha=0.25)
-plt.scatter(X[:, 0], X[:, 1], c=y, edgecolor="k")
-plt.xlabel(iris.feature_names[0])
-plt.ylabel(iris.feature_names[1])
-plt.title("Decision Tree Decision Boundaries")
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42)
+
+# Train model
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+
+# Evaluation
+y_pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+# Decision boundary
+plt.scatter(X[:, 0], X[:, 1], c=y)
+plt.xlabel("Sepal Length")
+plt.ylabel("Sepal Width")
+plt.title("Decision Tree Classification")
 plt.show()
+# # Experiment 16: Decision Tree metrics and 2D decision-boundary visualization
+# import numpy as np
+# import matplotlib.pyplot as plt
+# from sklearn.datasets import load_iris
+# from sklearn.model_selection import train_test_split
+# from sklearn.tree import DecisionTreeClassifier
+# from sklearn.metrics import accuracy_score, confusion_matrix
+
+# iris = load_iris()
+# X = iris.data[:, :2]  # First two features allow a 2D decision-boundary plot.
+# y = iris.target
+# X_train, X_test, y_train, y_test = train_test_split(
+#     X, y, test_size=0.25, random_state=42, stratify=y
+# )
+# model = DecisionTreeClassifier(max_depth=4, random_state=42).fit(X_train, y_train)
+# pred = model.predict(X_test)
+# print("Accuracy:", accuracy_score(y_test, pred))
+# print("Confusion matrix:\n", confusion_matrix(y_test, pred))
+
+# x_min, x_max = X[:, 0].min() - 0.5, X[:, 0].max() + 0.5
+# y_min, y_max = X[:, 1].min() - 0.5, X[:, 1].max() + 0.5
+# xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02),
+#                      np.arange(y_min, y_max, 0.02))
+# Z = model.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
+# plt.contourf(xx, yy, Z, alpha=0.25)
+# plt.scatter(X[:, 0], X[:, 1], c=y, edgecolor="k")
+# plt.xlabel(iris.feature_names[0])
+# plt.ylabel(iris.feature_names[1])
+# plt.title("Decision Tree Decision Boundaries")
+# plt.show()
